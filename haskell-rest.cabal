@@ -1,0 +1,99 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.2.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: d23b66ab0279ae1488fe7b8c06eef51a3a60d9a686b1791a2615940a60a3140e
+
+name:           haskell-rest
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/haskell-rest#readme>
+homepage:       https://github.com/githubuser/haskell-rest#readme
+bug-reports:    https://github.com/githubuser/haskell-rest/issues
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2020 Author name here
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/githubuser/haskell-rest
+
+library
+  exposed-modules:
+      Database.Init
+      Database.User
+      Server.Handler
+      Server.Route
+      Server.Url
+  other-modules:
+      Paths_haskell_rest
+  hs-source-dirs:
+      src
+  default-extensions: DeriveGeneric, DeriveAnyClass, OverloadedStrings, DuplicateRecordFields
+  build-depends:
+      base >=4.7 && <5
+    , bytestring
+    , http-types
+    , mtl
+    , regex-posix
+    , split
+    , sqlite-simple
+    , text
+    , wai
+    , wai-extra
+    , warp
+  default-language: Haskell2010
+
+executable haskell-rest-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_haskell_rest
+  hs-source-dirs:
+      app
+  default-extensions: DeriveGeneric, DeriveAnyClass, OverloadedStrings, DuplicateRecordFields
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , bytestring
+    , haskell-rest
+    , http-types
+    , mtl
+    , regex-posix
+    , split
+    , sqlite-simple
+    , text
+    , wai
+    , wai-extra
+    , warp
+  default-language: Haskell2010
+
+test-suite haskell-rest-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_haskell_rest
+  hs-source-dirs:
+      test
+  default-extensions: DeriveGeneric, DeriveAnyClass, OverloadedStrings, DuplicateRecordFields
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , bytestring
+    , haskell-rest
+    , http-types
+    , mtl
+    , regex-posix
+    , split
+    , sqlite-simple
+    , text
+    , wai
+    , wai-extra
+    , warp
+  default-language: Haskell2010
