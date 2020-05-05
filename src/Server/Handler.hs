@@ -1,4 +1,4 @@
-module Server.Handler (dispatcher, Env(..), RouteHandler, Route(..)) where
+module Server.Handler (dispatcher, Env(..), RouteHandler) where
 
 import Database.SQLite.Simple (Connection)
 import Control.Monad.Reader (ReaderT, asks)
@@ -6,18 +6,14 @@ import Network.HTTP.Types
   (
     Status,
     Method,
-    status200,
     status404,
     RequestHeaders,
     ResponseHeaders
   )
-import Data.List (find)
 import Data.Maybe (isJust, fromJust)
 
 import Server.Url (Path, UrlParams, matchStrict)
-
-instance Show Connection where
-  show _ =  "DB connection"
+import qualified Server.Route as Route
 
 data Env = Env {
   path :: Path,
@@ -26,32 +22,31 @@ data Env = Env {
   conn :: Connection,
   headers :: RequestHeaders,
   method :: Method
-} deriving (Show)
+}
+
+instance Show Env where
+  show e = unlines $ [(show . path) e, (show . query) e, (show . headers) e]
 
 type ResponseBody = String
 type Response = (Status, ResponseHeaders, ResponseBody)
 type Handler a = ReaderT Env IO a
 type RouteHandler = UrlParams -> Handler Response
 
-data Route = Route {
-  routeMethod :: Method,
-  routePath :: Path
-} deriving (Show)
-
-matchRoute :: Route -> Path -> Method -> Maybe UrlParams
-matchRoute route path method =
-  if routeMethod route /= method
+matchRoute :: Route.Route -> Path -> Method -> Maybe UrlParams
+matchRoute route path' method' =
+  if Route.method route /= method'
     then Nothing
-    else matchStrict (routePath route) path
+    else matchStrict (Route.path route) path'
 
-dispatcher :: [(Route, RouteHandler)] -> Handler Response
+dispatcher :: [(Route.Route, RouteHandler)] -> Handler Response
 dispatcher [] = return notFound
 dispatcher ((route, handle):rest) = do
-  path <- asks path
-  method <- asks method
-  let urlData = matchRoute route path method
-  if isJust urlData
-    then handle (fromJust urlData)
+  path' <- asks path
+  method' <- asks method
+  let params = matchRoute route path' method'
+  if isJust params
+    then handle (fromJust params)
     else dispatcher rest
 
+notFound :: Response
 notFound = (status404, [], "<h2>404</h2>")

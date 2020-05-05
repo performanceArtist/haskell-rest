@@ -2,15 +2,15 @@ module Server.Url (
   Path,
   UrlParams,
   parseQuery,
-  safeParseQuery,
+  parseQuery',
   match,
   matchStrict
 ) where
 
 import Data.List.Split (splitOn)
 import Text.Regex.Posix ((=~))
-import Control.Applicative ((<$>), (<*>), (<|>))
-import Data.Maybe (fromMaybe, isJust, fromJust)
+import Control.Applicative ((<|>))
+import Data.Maybe (fromMaybe)
 
 type Path = String
 type KeyValue = (String, String)
@@ -21,13 +21,15 @@ makeMatch :: Bool -> Path -> Path -> Maybe UrlParams
 makeMatch strict routePath candidate = fmap extractParams matches
   where
     split = splitOn "/"
-    match = if strict then matchPathStrict else matchPath
-    matches = match (split routePath) (split candidate)
+    matcher = if strict then matchPathStrict else matchPath
+    matches = matcher (split routePath) (split candidate)
 
 -- /test/:id matches /test/ and /test/:id/next - i.e. there are no length checks
+match :: Path -> Path -> Maybe UrlParams
 match = makeMatch False
 
 -- /test/:id only matches /test/some-value
+matchStrict :: Path -> Path -> Maybe UrlParams
 matchStrict = makeMatch True
 
 extractParams :: [MatchResult] -> [KeyValue]
@@ -48,15 +50,15 @@ matchUrlParts (a, b) = param <|> matchedPath
   where
     key = getParamName a
     value = if b == "" then Nothing else Just b
-    param = (\key value -> Param (key, value)) <$> key <*> value
+    param = (\k v -> Param (k, v)) <$> key <*> value
     matchedPath = if a == b then Just MatchedPath else Nothing
 
 getParamName :: String -> Maybe String
 getParamName (':':rest) = Just rest
-getParamName a = Nothing
+getParamName _ = Nothing
 
-parseQuery :: String -> Maybe [KeyValue]
-parseQuery queryString = traverse parseParam paramStrings
+parseQuery' :: String -> Maybe [KeyValue]
+parseQuery' queryString = traverse parseParam paramStrings
   where
     queryParamRegex = "^(\\w+)=(\\w+)$" :: String
     paramStrings = splitOn "&" (removeLeadingQuestion queryString)
@@ -70,4 +72,5 @@ getKeyValue :: [[String]] -> Maybe KeyValue
 getKeyValue [[_, key, value]] = Just (key, value)
 getKeyValue _ = Nothing
 
-safeParseQuery = (fromMaybe []) . parseQuery
+parseQuery :: String -> [KeyValue]
+parseQuery = (fromMaybe []) . parseQuery'

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d23b66ab0279ae1488fe7b8c06eef51a3a60d9a686b1791a2615940a60a3140e
+-- hash: 16df8858c15b8dfe595a9d9e94641bc3fee04ce4c0677b199fcdfbf0add7a3d5
 
 name:           haskell-rest
 version:        0.1.0.0
@@ -27,10 +27,15 @@ source-repository head
 
 library
   exposed-modules:
+      Controller.App
+      Controller.Home
+      Controller.User
+      Controller.Utils
       Database.Init
-      Database.User
+      Model.User
       Server.Handler
       Server.Route
+      Server.Static
       Server.Url
   other-modules:
       Paths_haskell_rest
@@ -48,6 +53,7 @@ library
     , text
     , wai
     , wai-extra
+    , wai-middleware-static
     , warp
   default-language: Haskell2010
 
@@ -71,6 +77,7 @@ executable haskell-rest-exe
     , text
     , wai
     , wai-extra
+    , wai-middleware-static
     , warp
   default-language: Haskell2010
 
@@ -95,5 +102,6 @@ test-suite haskell-rest-test
     , text
     , wai
     , wai-extra
+    , wai-middleware-static
     , warp
   default-language: Haskell2010

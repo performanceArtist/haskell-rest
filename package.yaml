@@ -31,6 +31,7 @@ dependencies:
 - split
 - regex-posix
 - wai-extra
+- wai-middleware-static
 
 library:
   source-dirs: src
