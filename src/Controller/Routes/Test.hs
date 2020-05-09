@@ -1,4 +1,4 @@
-module Controller.Routes.Home (routes) where
+module Controller.Routes.Test (routes) where
 
 import Network.HTTP.Types (status200, status400)
 import Control.Monad.Reader (ask)

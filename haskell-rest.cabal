@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b8ff198751a3326a0b407bef0302679dc1f7490fd181ccb64294962cca3b662f
+-- hash: e807ebb3ebef80e71017eb2ee0618ad06faa6278760eaa719e82fe3b5d25c84d
 
 name:           haskell-rest
 version:        0.1.0.0
@@ -28,13 +28,15 @@ source-repository head
 library
   exposed-modules:
       Controller.Routes.App
-      Controller.Routes.Home
+      Controller.Routes.Test
       Controller.Routes.User
       Controller.Utils
       Controller.Validation
       Database.Init
+      Model.User.Access
       Model.User.Field
-      Model.User.Read
+      Model.User.Query
+      Model.User.Update
       Server.Handler
       Server.Route
       Server.Static

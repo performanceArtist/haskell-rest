@@ -1,4 +1,4 @@
-module Model.User.Read (getByID) where
+module Model.User.Access (getByID) where
 
 import Database.SQLite.Simple (Connection, query, Only(..))
 import Data.Maybe (listToMaybe)
