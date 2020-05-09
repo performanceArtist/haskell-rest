@@ -10,7 +10,35 @@
 </head>
 
 <body>
-  <h2>Hello world</h2>
+  <h2>Get user by id</h2>
+  <form id="user-form">
+    <input type="text" name="id" value="1" />
+    <button type="submit">Fetch</button>
+  </form>
+  <div>
+    <h3>Response:</h3>
+    <div id="response"></div>
+  </div>
 </body>
+<script>
+  const form = document.getElementById('user-form');
+  const response = document.getElementById('response');
+
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    const id = form.elements.id.value;
+
+    fetch(`/user/${id}`)
+      .then((response) => {
+        if (!response.ok) {
+          return response.text();
+        }
+
+        return response.json();
+      })
+      .then(user => response.innerHTML = user)
+      .catch(error => response.innerHTML = `Error: ${error}`)
+  });
+</script>
 
 </html>

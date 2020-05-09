@@ -20,7 +20,7 @@ import Database.Init (withConn)
 import Server.Handler (dispatcher, Env(..))
 import Server.Url (parseQuery)
 import Server.Static (staticMiddleware)
-import Controller.App (routes)
+import Controller.Routes.App (routes)
 
 main :: IO ()
 main = run 5000 (middleware app)

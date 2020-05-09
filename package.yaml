@@ -32,6 +32,7 @@ dependencies:
 - regex-posix
 - wai-extra
 - wai-middleware-static
+- aeson
 
 library:
   source-dirs: src

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 16df8858c15b8dfe595a9d9e94641bc3fee04ce4c0677b199fcdfbf0add7a3d5
+-- hash: b8ff198751a3326a0b407bef0302679dc1f7490fd181ccb64294962cca3b662f
 
 name:           haskell-rest
 version:        0.1.0.0
@@ -27,12 +27,14 @@ source-repository head
 
 library
   exposed-modules:
-      Controller.App
-      Controller.Home
-      Controller.User
+      Controller.Routes.App
+      Controller.Routes.Home
+      Controller.Routes.User
       Controller.Utils
+      Controller.Validation
       Database.Init
-      Model.User
+      Model.User.Field
+      Model.User.Read
       Server.Handler
       Server.Route
       Server.Static
@@ -43,7 +45,8 @@ library
       src
   default-extensions: DeriveGeneric, DeriveAnyClass, OverloadedStrings, DuplicateRecordFields
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , base >=4.7 && <5
     , bytestring
     , http-types
     , mtl
@@ -66,7 +69,8 @@ executable haskell-rest-exe
   default-extensions: DeriveGeneric, DeriveAnyClass, OverloadedStrings, DuplicateRecordFields
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , base >=4.7 && <5
     , bytestring
     , haskell-rest
     , http-types
@@ -91,7 +95,8 @@ test-suite haskell-rest-test
   default-extensions: DeriveGeneric, DeriveAnyClass, OverloadedStrings, DuplicateRecordFields
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , base >=4.7 && <5
     , bytestring
     , haskell-rest
     , http-types

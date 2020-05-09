@@ -1,4 +1,4 @@
-module Server.Handler (dispatcher, Env(..), RouteHandler) where
+module Server.Handler (dispatcher, Env(..), RouteHandler, Response, Handler) where
 
 import Database.SQLite.Simple (Connection)
 import Control.Monad.Reader (ReaderT, asks)
