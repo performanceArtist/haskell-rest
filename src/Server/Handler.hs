@@ -1,4 +1,10 @@
-module Server.Handler (dispatcher, Env(..), RouteHandler, Response, Handler) where
+module Server.Handler (
+  dispatcher,
+  Env(..),
+  RootHandler,
+  Response,
+  Handler
+) where
 
 import Database.SQLite.Simple (Connection)
 import Control.Monad.Reader (ReaderT, asks)
@@ -29,8 +35,8 @@ instance Show Env where
 
 type ResponseBody = String
 type Response = (Status, ResponseHeaders, ResponseBody)
-type Handler a = ReaderT Env IO a
-type RouteHandler = UrlParams -> Handler Response
+type Handler a b = a -> ReaderT Env IO b
+type RootHandler = Handler UrlParams Response
 
 matchRoute :: Route.Route -> Path -> Method -> Maybe UrlParams
 matchRoute route path' method' =
@@ -38,7 +44,7 @@ matchRoute route path' method' =
     then Nothing
     else matchStrict (Route.path route) path'
 
-dispatcher :: [(Route.Route, RouteHandler)] -> Handler Response
+dispatcher :: Handler ([(Route.Route, RootHandler)]) Response
 dispatcher [] = return notFound
 dispatcher ((route, handle):rest) = do
   path' <- asks path

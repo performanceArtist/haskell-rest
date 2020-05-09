@@ -1,12 +1,12 @@
 module Controller.Utils (prefix) where
 
-import Server.Handler (RouteHandler)
+import Server.Handler (RootHandler)
 import Server.Route (Route(..))
 
-prefix :: String -> [(Route, RouteHandler)] -> [(Route, RouteHandler)]
+prefix :: String -> [(Route, RootHandler)] -> [(Route, RootHandler)]
 prefix prefix' routes = fmap (addPrefix prefix') routes
 
-addPrefix :: String -> (Route, RouteHandler) -> (Route, RouteHandler)
+addPrefix :: String -> (Route, RootHandler) -> (Route, RootHandler)
 addPrefix prefix' (route, handler) = (prefixed, handler)
   where
     oldPath = path route

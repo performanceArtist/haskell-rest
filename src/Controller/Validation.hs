@@ -7,10 +7,10 @@ import Control.Monad.Reader (asks)
 import Server.Handler (Handler, Env(..))
 import Server.Url (UrlParams)
 
-withInt :: String -> UrlParams -> Handler (Maybe Int)
+withInt :: String -> Handler UrlParams (Maybe Int)
 withInt name = return . (lookup name >=> readMaybe)
 
-extractBody :: (String -> Maybe a) -> UrlParams -> Handler (Maybe a)
+extractBody :: (String -> Maybe a) -> Handler b (Maybe a)
 extractBody parser _ = do
   result <- asks (parser . body)
   return result
