@@ -5,7 +5,8 @@ import Control.Monad.Reader (asks)
 import Control.Monad ((>=>))
 import Control.Monad.IO.Class (liftIO)
 
-import Server.Handler (Handler, RootHandler, Response, Env(..))
+import Server.Handler (Handler, RootHandler, Response)
+import qualified Server.Env as Env
 import Server.Route (Route(..))
 import Controller.Utils (prefix)
 import Controller.Validation (withInt, extractBody)
@@ -17,8 +18,8 @@ import qualified Model.User.Query as Query
 
 getUser' :: Handler ((Maybe Int)) Response
 getUser' (Just userID) = do
-  conn' <- asks conn
-  user <- liftIO $ Access.getByID conn' userID
+  conn <- asks Env.conn
+  user <- liftIO $ Access.getByID conn userID
   return $ userResponse user
 getUser' Nothing = return (status400, [], "Invalid id")
 
@@ -31,8 +32,8 @@ getUser = (withInt "user_id") >=> getUser'
 
 postUser' :: Handler (Maybe Query.Create) Response
 postUser' (Just query') = do
-  conn' <- asks conn
-  liftIO $ Update.createUser conn' query'
+  conn <- asks Env.conn
+  liftIO $ Update.createUser conn query'
   return (status200, [], "Ok")
 postUser' Nothing = return (status400, [], "Invalid query")
 

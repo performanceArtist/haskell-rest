@@ -17,7 +17,8 @@ import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString.Lazy.Char8 as BSL
 
 import Database.Init (withConn)
-import Server.Handler (dispatcher, Env(..))
+import Server.Handler (dispatcher)
+import qualified Server.Env as Env
 import Server.Url (parseQuery)
 import Server.Static (staticMiddleware)
 import Controller.Routes.App (routes)
@@ -29,7 +30,7 @@ main = run 5000 (middleware app)
 app :: Application
 app req respond = withConn $ \connection -> do
   stringBody <- fmap BSL.unpack (strictRequestBody req)
-  let env = Env {
+  let env = Env.Env {
     path = (BS.unpack . rawPathInfo) req,
     query = (parseQuery . BS.unpack . rawQueryString) req,
     body = stringBody,
