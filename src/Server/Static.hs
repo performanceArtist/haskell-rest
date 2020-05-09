@@ -1,4 +1,4 @@
-module Server.Static (staticMiddleware) where
+module Server.Static (staticMiddleware, indexPolicy) where
 
 import Network.Wai.Middleware.Static (Policy(..), staticPolicy, addBase, policy, (>->))
 import Network.Wai (Middleware)
@@ -6,7 +6,7 @@ import Network.Wai (Middleware)
 indexPolicy :: Policy
 indexPolicy = policy $ \url -> if url == ""
   then Just "index.html"
-  else Nothing
+  else Just url
 
 publicPolicy :: Policy
 publicPolicy = addBase "public"
