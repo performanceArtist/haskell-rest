@@ -24,7 +24,7 @@ getUser' (Just userID) = do
 getUser' Nothing = return (status400, [], "Invalid id")
 
 getUser :: RootHandler
-getUser = (withInt "user_id") >=> getUser'
+getUser = getUser' . (withInt "user_id")
 
 postUser' :: Handler (Maybe Query.Create.Scheme) Response
 postUser' (Just query) = do

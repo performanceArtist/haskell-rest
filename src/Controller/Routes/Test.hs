@@ -21,7 +21,7 @@ testID' (Just validID) = do
 testID' Nothing = return (status400, [], "Invalid id")
 
 testID :: RootHandler
-testID = (withInt "id") >=> testID'
+testID = testID' . (withInt "id")
 
 data BigQuery = BigQuery {
   base_id :: Int,
@@ -32,10 +32,10 @@ data BigQuery = BigQuery {
 
 parseBigQuery :: Handler UrlParams (Maybe BigQuery)
 parseBigQuery params = do
-  baseID <- withInt "id" params
-  itemID <- withInt "item_id" params
+  let baseID = withInt "id" params
+  let itemID = withInt "item_id" params
   query <- asks Env.query
-  one' <- withInt "one" query
+  let one' = withInt "one" query
   let two' = lookup "two" query
   return $ BigQuery <$> baseID <*> itemID <*> one' <*> two'
 
