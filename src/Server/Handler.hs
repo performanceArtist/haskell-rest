@@ -29,14 +29,13 @@ matchRoute route path method =
     then Nothing
     else matchStrict (Route.path route) path
 
-dispatcher :: Handler ([(Route.Scheme, RootHandler)]) Response
+dispatcher :: Handler [(Route.Scheme, RootHandler)] Response
 dispatcher [] = return notFound
 dispatcher ((route, handler):rest) = do
   path <- asks Env.path
   method <- asks Env.method
-  case matchRoute route path method of
-    Just params -> handler params
-    _ -> dispatcher rest
+  let params = matchRoute route path method
+  maybe (dispatcher rest) handler params
 
 notFound :: Response
 notFound = (status404, [], "<h2>404</h2>")

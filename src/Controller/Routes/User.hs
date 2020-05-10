@@ -1,6 +1,6 @@
 module Controller.Routes.User (routes) where
 
-import Network.HTTP.Types (status200, status404, status400)
+import Network.HTTP.Types (status404, status400)
 import Control.Monad.Reader (asks)
 import Control.Monad ((>=>))
 import Control.Monad.IO.Class (liftIO)
@@ -8,7 +8,7 @@ import Control.Monad.IO.Class (liftIO)
 import Server.Handler (Handler, RootHandler, Response)
 import qualified Server.Env as Env
 import qualified Server.Route as Route
-import Controller.Utils (prefix)
+import Controller.Utils (prefix, json, fromEither)
 import Controller.Validation (withInt, extractBody)
 
 import qualified Model.User.Field as Field
@@ -20,21 +20,17 @@ getUser' :: Handler (Maybe Int) Response
 getUser' (Just userID) = do
   conn <- asks Env.conn
   user <- liftIO $ Access.getByID conn userID
-  return $ userResponse user
+  return $ maybe (status404, [], "User not found") (json . Field.toString) user
 getUser' Nothing = return (status400, [], "Invalid id")
-
-userResponse :: Maybe Field.User -> Response
-userResponse (Just user) = (status200, [("Content-type", "application/json")], Field.toString user)
-userResponse Nothing = (status404, [], "User not found")
 
 getUser :: RootHandler
 getUser = (withInt "user_id") >=> getUser'
 
 postUser' :: Handler (Maybe Query.Create.Scheme) Response
-postUser' (Just query') = do
+postUser' (Just query) = do
   conn <- asks Env.conn
-  liftIO $ Update.createUser conn query'
-  return (status200, [], "Ok")
+  result <- liftIO $ Update.createUser conn query
+  return $ fromEither result
 postUser' Nothing = return (status400, [], "Invalid query")
 
 postUser :: RootHandler

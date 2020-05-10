@@ -1,5 +1,7 @@
 # haskell-rest
 
+To create the database, navigate to `src/Database` and run `init.sh`.
+
 Watch build
 
 ```
