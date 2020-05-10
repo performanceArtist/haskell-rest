@@ -7,16 +7,16 @@ import Control.Monad.IO.Class (liftIO)
 
 import Server.Handler (Handler, RootHandler, Response)
 import qualified Server.Env as Env
-import Server.Route (Route(..))
+import qualified Server.Route as Route
 import Controller.Utils (prefix)
 import Controller.Validation (withInt, extractBody)
 
 import qualified Model.User.Field as Field
 import qualified Model.User.Access as Access
 import qualified Model.User.Update as Update
-import qualified Model.User.Query as Query
+import qualified Model.User.Query.Create as Query.Create
 
-getUser' :: Handler ((Maybe Int)) Response
+getUser' :: Handler (Maybe Int) Response
 getUser' (Just userID) = do
   conn <- asks Env.conn
   user <- liftIO $ Access.getByID conn userID
@@ -30,7 +30,7 @@ userResponse Nothing = (status404, [], "User not found")
 getUser :: RootHandler
 getUser = (withInt "user_id") >=> getUser'
 
-postUser' :: Handler (Maybe Query.Create) Response
+postUser' :: Handler (Maybe Query.Create.Scheme) Response
 postUser' (Just query') = do
   conn <- asks Env.conn
   liftIO $ Update.createUser conn query'
@@ -38,11 +38,11 @@ postUser' (Just query') = do
 postUser' Nothing = return (status400, [], "Invalid query")
 
 postUser :: RootHandler
-postUser = (extractBody Update.parseQuery) >=> postUser'
+postUser = (extractBody Query.Create.parse) >=> postUser'
 
-routes :: [(Route, RootHandler)]
+routes :: [(Route.Scheme, RootHandler)]
 routes = prefix "/user" $
   [
-    (Route "GET" "/:user_id", getUser),
-    (Route "POST" "/", postUser)
+    (Route.Scheme "GET" "/:user_id", getUser),
+    (Route.Scheme "POST" "/", postUser)
   ]

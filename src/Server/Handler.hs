@@ -20,16 +20,16 @@ import qualified Server.Route as Route
 
 type ResponseBody = String
 type Response = (Status, ResponseHeaders, ResponseBody)
-type Handler a b = a -> ReaderT Env.Env IO b
+type Handler a b = a -> ReaderT Env.Scheme IO b
 type RootHandler = Handler UrlParams Response
 
-matchRoute :: Route.Route -> Path -> Method -> Maybe UrlParams
+matchRoute :: Route.Scheme -> Path -> Method -> Maybe UrlParams
 matchRoute route path method =
   if Route.method route /= method
     then Nothing
     else matchStrict (Route.path route) path
 
-dispatcher :: Handler ([(Route.Route, RootHandler)]) Response
+dispatcher :: Handler ([(Route.Scheme, RootHandler)]) Response
 dispatcher [] = return notFound
 dispatcher ((route, handler):rest) = do
   path <- asks Env.path

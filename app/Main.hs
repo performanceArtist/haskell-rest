@@ -30,7 +30,7 @@ main = run 5000 (middleware app)
 app :: Application
 app req respond = withConn $ \connection -> do
   stringBody <- fmap BSL.unpack (strictRequestBody req)
-  let env = Env.Env {
+  let env = Env.Scheme {
     path = (BS.unpack . rawPathInfo) req,
     query = (parseQuery . BS.unpack . rawQueryString) req,
     body = stringBody,
@@ -38,5 +38,5 @@ app req respond = withConn $ \connection -> do
     headers = requestHeaders req,
     conn = connection
   }
-  (status, headers', response) <- runReaderT (dispatcher routes) env
-  respond $ responseLBS status headers' (BSL.pack response)
+  (status, headers, response) <- runReaderT (dispatcher routes) env
+  respond $ responseLBS status headers (BSL.pack response)

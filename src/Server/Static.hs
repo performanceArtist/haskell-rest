@@ -1,4 +1,4 @@
-module Server.Static (staticMiddleware, indexPolicy) where
+module Server.Static (staticMiddleware) where
 
 import Network.Wai.Middleware.Static (Policy(..), staticPolicy, addBase, policy, (>->))
 import Network.Wai (Middleware)

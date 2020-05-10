@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: ec954c0bd8357ad6505515c8d2e45cfe9f6149e5c8ecd101f6317854de2bf294
+-- hash: 3ca5a3101363c47d60afb7d4a19e673710d84e189a39871f574d860ba8fe4a31
 
 name:           haskell-rest
 version:        0.1.0.0
@@ -35,7 +35,7 @@ library
       Database.Init
       Model.User.Access
       Model.User.Field
-      Model.User.Query
+      Model.User.Query.Create
       Model.User.Update
       Server.Env
       Server.Handler

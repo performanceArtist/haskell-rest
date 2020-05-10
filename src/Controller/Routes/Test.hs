@@ -6,7 +6,7 @@ import Control.Monad ((>=>))
 
 import Server.Handler (RootHandler, Handler, Response)
 import qualified Server.Env as Env
-import Server.Route (Route(..))
+import qualified Server.Route as Route
 import Controller.Validation (withInt)
 import Server.Url (UrlParams)
 
@@ -46,10 +46,10 @@ testQueryParam' Nothing = return (status400, [], "Invalid query")
 testQueryParam :: RootHandler
 testQueryParam = parseBigQuery >=> testQueryParam'
 
-routes :: [(Route, RootHandler)]
+routes :: [(Route.Scheme, RootHandler)]
 routes =
   [
-    (Route "GET" "/test", test),
-    (Route "GET" "/test/:id", testID),
-    (Route "GET" "/test/:id/item/:item_id", testQueryParam)
+    (Route.Scheme "GET" "/test", test),
+    (Route.Scheme "GET" "/test/:id", testID),
+    (Route.Scheme "GET" "/test/:id/item/:item_id", testQueryParam)
   ]

@@ -1,10 +1,10 @@
-module Server.Env (Env(..)) where
+module Server.Env (Scheme(..)) where
 
 import Network.HTTP.Types (Method, RequestHeaders)
 import Database.SQLite.Simple (Connection)
 import Server.Url (Path)
 
-data Env = Env {
+data Scheme = Scheme {
   path :: Path,
   query :: [(String, String)],
   body :: String,
@@ -13,5 +13,5 @@ data Env = Env {
   method :: Method
 }
 
-instance Show Env where
+instance Show Scheme where
   show e = unlines $ [(show . path) e, (show . query) e, (show . headers) e]

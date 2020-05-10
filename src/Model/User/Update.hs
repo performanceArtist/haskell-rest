@@ -1,14 +1,9 @@
-module Model.User.Update (parseQuery, createUser) where
+module Model.User.Update (createUser) where
 
 import Database.SQLite.Simple (Connection, execute)
-import Data.Aeson (decode)
-import qualified Data.ByteString.Lazy.Char8 as BSL
 
-import qualified Model.User.Query as Query
+import qualified Model.User.Query.Create as Query.Create
 
-parseQuery :: String -> Maybe Query.Create
-parseQuery body = decode (BSL.pack body)
-
-createUser :: Connection -> Query.Create -> IO ()
+createUser :: Connection -> Query.Create.Scheme -> IO ()
 createUser conn query = do
-  execute conn "INSERT INTO user (username, password) VALUES (?, ?)" (Query.username query, Query.password query)
+  execute conn "INSERT INTO user (username, password) VALUES (?, ?)" (Query.Create.username query, Query.Create.password query)

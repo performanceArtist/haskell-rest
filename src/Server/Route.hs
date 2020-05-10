@@ -1,10 +1,10 @@
-module Server.Route (Route(..)) where
+module Server.Route (Scheme(..)) where
 
 import Network.HTTP.Types (Method)
 
 import Server.Url (Path)
 
-data Route = Route {
+data Scheme = Scheme {
   method :: Method,
   path :: Path
 } deriving (Show)
