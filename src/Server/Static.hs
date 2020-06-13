@@ -8,8 +8,10 @@ indexPolicy = policy $ \url -> if url == ""
   then Just "index.html"
   else Just url
 
-publicPolicy :: Policy
-publicPolicy = addBase "public"
+type FolderPath = String
 
-staticMiddleware :: Middleware
-staticMiddleware = staticPolicy $ indexPolicy >-> publicPolicy
+publicPolicy :: FolderPath -> Policy
+publicPolicy path = addBase path
+
+staticMiddleware :: FolderPath -> Middleware
+staticMiddleware path = staticPolicy $ indexPolicy >-> (publicPolicy path)

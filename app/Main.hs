@@ -25,7 +25,7 @@ import Controller.Routes.App (routes)
 
 main :: IO ()
 main = run 5000 (middleware app)
-  where middleware = logStdout . staticMiddleware
+  where middleware = logStdout . (staticMiddleware "public")
 
 app :: Application
 app req respond = withConn $ \connection -> do
